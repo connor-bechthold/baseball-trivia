@@ -9,19 +9,8 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-
-//Global error modal style
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid red",
-  boxShadow: 24,
-  p: 4,
-};
+import { errorModalStyle } from "../styles/modal";
+import { socket } from "..";
 
 function Home() {
   //General Errors
@@ -34,8 +23,18 @@ function Home() {
   };
 
   //Create Game Section
+  const [playerName, setPlayerName] = useState("");
+  const [gameName, setGameName] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [numberOfQuestions, setNumberOfQuestions] = useState(10);
+
+  const handlePlayerNameChange = (event) => {
+    setPlayerName(event.target.value);
+  };
+
+  const handleGameNameChange = (event) => {
+    setGameName(event.target.value);
+  };
 
   const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
@@ -53,9 +52,26 @@ function Home() {
   };
 
   const createGame = () => {
-    if (Number.isNaN(numberOfQuestions)) {
+    if (Number.isNaN(numberOfQuestions) || !playerName || !gameName) {
       setError(true);
-      setErrorMessage("Invalid number of questions entered.");
+      setErrorMessage(
+        "Please fill out all required fields before creating a game"
+      );
+    } else {
+      const data = {
+        playerName,
+        gameName,
+        difficulty,
+        numberOfQuestions,
+      };
+      socket.emit("createGame", data, (res) => {
+        if (res.status === "Error") {
+          setError(true);
+          setErrorMessage(res.message);
+        } else {
+          console.log(res);
+        }
+      });
     }
   };
 
@@ -64,7 +80,21 @@ function Home() {
       <div>
         <h1>Create Game</h1>
         <FormControl fullWidth>
-          <p>Select A Difficulty</p>
+          <p>Player Name</p>
+          <TextField
+            displayEmpty
+            variant="outlined"
+            value={playerName}
+            onChange={handlePlayerNameChange}
+          />
+          <p>Game Name</p>
+          <TextField
+            displayEmpty
+            variant="outlined"
+            value={gameName}
+            onChange={handleGameNameChange}
+          />
+          <p>Difficulty</p>
           <Select
             value={difficulty}
             onChange={handleDifficultyChange}
@@ -76,7 +106,7 @@ function Home() {
             <MenuItem value={"hard"}>Hard</MenuItem>
           </Select>
 
-          <p>Select A Number Of Questions</p>
+          <p>Number Of Questions</p>
           <TextField
             displayEmpty
             type="number"
@@ -102,7 +132,7 @@ function Home() {
       </div>
 
       <Modal open={error} onClose={handleErrorClose}>
-        <Box sx={modalStyle}>
+        <Box sx={errorModalStyle}>
           <Typography variant="h6" component="h2" color="red" fontWeight="bold">
             Error
           </Typography>
