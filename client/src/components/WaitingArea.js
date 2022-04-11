@@ -3,6 +3,13 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { socket } from "..";
 
+const mapStateToProps = (state) => {
+  return {
+    type: state.player.type,
+    gameId: state.game.gameId,
+  };
+};
+
 const WaitingArea = ({ gameId, type }) => {
   const [players, setPlayers] = useState([]);
 
@@ -30,13 +37,6 @@ const WaitingArea = ({ gameId, type }) => {
       )}
     </div>
   );
-};
-
-const mapStateToProps = (state) => {
-  return {
-    type: state.player.type,
-    gameId: state.game.gameId,
-  };
 };
 
 export default connect(mapStateToProps)(WaitingArea);

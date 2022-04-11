@@ -7,6 +7,13 @@ import { connect } from "react-redux";
 import { setPlayer } from "../actions/player";
 import { setGameId } from "../actions/game";
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setPlayer: () => dispatch(setPlayer()),
+    setGameId: (gameId) => dispatch(setGameId(gameId)),
+  };
+};
+
 const JoinGame = (props) => {
   //Navigation
   const navigate = useNavigate();
@@ -90,13 +97,6 @@ const JoinGame = (props) => {
       </Modal>
     </div>
   );
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setPlayer: () => dispatch(setPlayer()),
-    setGameId: (gameId) => dispatch(setGameId(gameId)),
-  };
 };
 
 export default connect(null, mapDispatchToProps)(JoinGame);

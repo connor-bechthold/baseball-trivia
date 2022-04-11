@@ -16,6 +16,14 @@ import { connect } from "react-redux";
 import { setHost, setName } from "../actions/player";
 import { setGameId } from "../actions/game";
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setHost: () => dispatch(setHost()),
+    setName: (name) => dispatch(setName(name)),
+    setGameId: (gameId) => dispatch(setGameId(gameId)),
+  };
+};
+
 const CreateGame = (props) => {
   //Navigation
   const navigate = useNavigate();
@@ -122,14 +130,6 @@ const CreateGame = (props) => {
       </Modal>
     </div>
   );
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setHost: () => dispatch(setHost()),
-    setName: (name) => dispatch(setName(name)),
-    setGameId: (gameId) => dispatch(setGameId(gameId)),
-  };
 };
 
 export default connect(null, mapDispatchToProps)(CreateGame);
