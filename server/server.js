@@ -3,7 +3,8 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { getQuestions } = require("./utils/questions");
+const Games = require("./games");
+const Players = require("./players");
 const port = process.env.PORT || 3001;
 
 //Enable cors
@@ -19,57 +20,63 @@ const io = new Server(server, {
   },
 });
 
-//Keep track of all current games and players
-const games = [];
-const players = [];
+//Create Games and Players instance
+const games = new Games();
+const players = new Players();
 
+//Define socket connection
 io.on("connection", async (socket) => {
   console.log(`User with ID ${socket.id} connected!`);
 
-  //Client creates a game
-  socket.on("createGame", async (data, callback) => {
-    if (games.find((x) => x.name === data.gameName)) {
+  //Host creates a game
+  socket.on(
+    "createGame",
+    async ({ difficulty, numberOfQuestions, name }, callback) => {
+      const game = await games.createGame(
+        socket.id,
+        difficulty,
+        numberOfQuestions
+      );
+
+      const player = players.createPlayer(socket.id, game.gameId, name);
+
+      //Join the room
+      socket.join(game.gameId);
+
+      io.to(game.gameId).emit("playerJoined", {
+        playerId: player.playerId,
+        name: player.name,
+      });
+
+      //Return the ID of the game
+      return callback(game.gameId);
+    }
+  );
+
+  socket.on("joinGame", ({ gameId, name }, callback) => {
+    const game = games.getGameById(gameId);
+    if (game === null) {
       return callback({
         status: "Error",
-        message: `Room ${gameName} already exists`,
+        message: `Game with ID ${gameId} does not exist`,
       });
     }
-    //Get questions for the game
-    const questions = await getQuestions(
-      data.difficulty,
-      data.numberOfQuestions
-    );
+    players.createPlayer(socket.id, game.gameId, name);
 
-    if (!questions) {
-      return callback({
-        status: "Error",
-        message: "Unable to fetch questions for game",
-      });
-    }
-    //Create the new game
-    const newGame = {
-      name: data.gameName,
-      host: socket.id,
-      questions,
-    };
-    games.push(newGame);
+    socket.join(game.gameId);
 
-    //Create the new player
-    const newPlayer = {
-      name: data.playerName,
-      game: data.gameName,
-      id: socket.id,
-      score: 0,
-    };
-    players.push(newPlayer);
-
-    console.log(games);
-    console.log(players);
+    const playersData = players.getPlayersByGameId(gameId);
+    io.to(gameId).emit("playersData", playersData);
 
     return callback({ status: "Success" });
   });
 
-  io.on("disconnect", () => {
+  socket.on("getPlayersData", ({ gameId }) => {
+    const playersData = players.getPlayersByGameId(gameId);
+    io.to(gameId).emit("playersData", playersData);
+  });
+
+  socket.on("disconnect", () => {
     console.log(`User with ID ${socket.id} disconnected!`);
   });
 });

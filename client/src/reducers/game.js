@@ -1,13 +1,13 @@
 const defaultGame = {
-  categories: [],
+  gameId: "",
 };
 
 const gameReducer = (state = defaultGame, action) => {
   switch (action.type) {
-    case "SET_CATEGORIES":
+    case "SET_GAME_ID":
       return {
-        categories: action.categories,
         ...state,
+        gameId: action.gameId,
       };
     default:
       return state;
