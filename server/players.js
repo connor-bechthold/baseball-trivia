@@ -16,6 +16,14 @@ module.exports = class Players {
     return newPlayer;
   }
 
+  getPlayerById(playerId) {
+    const player = this.players.find((x) => x.playerId === playerId);
+    if (!player) {
+      return null;
+    }
+    return player;
+  }
+
   getPlayersByGameId(gameId) {
     return this.players
       .filter((x) => x.gameId === gameId)

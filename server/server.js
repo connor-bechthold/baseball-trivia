@@ -5,6 +5,7 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const Games = require("./games");
 const Players = require("./players");
+const { prepQuestion } = require("./questions");
 const port = process.env.PORT || 3001;
 
 //Enable cors
@@ -64,11 +65,34 @@ io.on("connection", async (socket) => {
     players.createPlayer(socket.id, game.gameId, name);
 
     socket.join(game.gameId);
+    game.numberOfPlayers += 1;
 
     const playersData = players.getPlayersByGameId(gameId);
     io.to(gameId).emit("playersData", playersData);
 
     return callback({ status: "Success" });
+  });
+
+  socket.on("startGame", () => {
+    const player = players.getPlayerById(socket.id);
+
+    if (player) {
+      //Get the current question
+      let currentQuestion = games.getCurrentQuestion(player.gameId);
+
+      //Convert to correct form
+      currentQuestion = prepQuestion(currentQuestion);
+
+      //Set the game to started
+      const game = games.getGameById(player.gameId);
+      game.started = true;
+
+      //Emit that the host has started the game
+      io.to(game.gameId).emit("hostStartedGame");
+
+      //Send the next (current) question
+      io.to(game.gameId).emit("nextQuestion", currentQuestion);
+    }
   });
 
   socket.on("getPlayersData", ({ gameId }) => {
