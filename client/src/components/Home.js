@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { socket } from "..";
@@ -33,21 +33,40 @@ const Home = ({ resetGame, resetPlayer }) => {
   });
 
   return (
-    <div>
-      <h1>Welcome To Sports Trivia!</h1>
-      <Button
-        style={{ backgroundColor: "green", color: "white" }}
-        onClick={toCreateGame}
-      >
-        Create Game
-      </Button>
-      <Button
-        style={{ backgroundColor: "red", color: "white" }}
-        onClick={toJoinGame}
-      >
-        Join Game
-      </Button>
-    </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+    >
+      <Box sx={{ height: "50vh", textAlign: "center" }}>
+        <Typography variant="h3">Welcome To Sprivia!</Typography>
+        <Typography variant="body2">(A sports based trivia game)</Typography>
+        <Typography variant="h6" sx={{ marginTop: "15px" }}>
+          Start a new game or join a game to get started
+        </Typography>
+
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap="80px"
+          style={{ marginTop: "20px" }}
+        >
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={toCreateGame}
+          >
+            Create Game
+          </Button>
+          <Button variant="contained" size="large" onClick={toJoinGame}>
+            Join Game
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

@@ -4,6 +4,9 @@ import store from "./store/storeConfig";
 import AppRouter from "./routers/AppRouter";
 import { Provider } from "react-redux";
 import { createRoot } from "react-dom/client";
+import "./index.css";
+import { globalTheme } from "./styles/global";
+import { ThemeProvider } from "@mui/material";
 
 //Setup global socket constant
 export const socket = io("http://localhost:3001");
@@ -16,6 +19,8 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
-    <AppRouter />
+    <ThemeProvider theme={globalTheme}>
+      <AppRouter />
+    </ThemeProvider>
   </Provider>
 );
