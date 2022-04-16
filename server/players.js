@@ -8,6 +8,7 @@ module.exports = class Players {
       playerId,
       gameId,
       name,
+      correct: false,
       score: 0,
     };
 
@@ -25,13 +26,29 @@ module.exports = class Players {
   }
 
   getPlayersByGameId(gameId) {
-    return this.players
-      .filter((x) => x.gameId === gameId)
-      .map((x) => {
-        return {
-          playerId: x.playerId,
-          name: x.name,
-        };
-      });
+    return this.players.filter((x) => x.gameId === gameId);
+  }
+
+  deletePlayerById(playerId) {
+    console.log("BEFORE", this.players);
+    const playerIndex = this.players.findIndex((x) => x.playerId === playerId);
+    if (playerIndex !== -1) {
+      this.players.splice(playerIndex, 1);
+    }
+    console.log("AFTER", this.players);
+  }
+
+  deletePlayersByGame(gameId) {
+    console.log("before", this.players);
+    const playersToDelete = this.players.filter((x) => x.gameId === gameId);
+    for (let i = 0; i < playersToDelete.length; i++) {
+      const player = playersToDelete[i];
+      const playerIndex = this.players.indexOf(player);
+
+      if (playerIndex !== -1) {
+        this.players.splice(playerIndex, 1);
+      }
+    }
+    console.log("after", this.players);
   }
 };

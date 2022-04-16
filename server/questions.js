@@ -20,11 +20,6 @@ async function getQuestions(difficulty, numberOfQuestions) {
 function prepQuestion(question) {
   const options = [question.correct_answer, ...question.incorrect_answers];
 
-  //Decode each answer from URL format (which we get from the API)
-  for (let i = 0; i < options.length; i++) {
-    options[i] = decodeURIComponent(options[i]);
-  }
-
   //Re-order the elements so the correct answer isn't always first
   //Uses Fisher-Yates shuffle
   for (let i = options.length - 1; i > 0; i--) {
@@ -34,7 +29,7 @@ function prepQuestion(question) {
 
   return {
     type: question.type,
-    question: decodeURIComponent(question.question),
+    question: question.question,
     options: options,
   };
 }

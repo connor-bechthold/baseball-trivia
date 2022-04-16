@@ -9,6 +9,8 @@ const gameReducer = (state = defaultGame, action) => {
         ...state,
         gameId: action.gameId,
       };
+    case "RESET_GAME":
+      return defaultGame;
     default:
       return state;
   }

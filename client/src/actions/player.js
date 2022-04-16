@@ -17,6 +17,13 @@ export const setPlayer = () => {
   };
 };
 
+export const setScore = (score) => {
+  return {
+    type: "SET_SCORE",
+    score,
+  };
+};
+
 export const resetPlayer = () => {
   return {
     type: "RESET_PLAYER",

@@ -1,6 +1,7 @@
 const defaultPlayer = {
   type: "",
   name: "",
+  score: 0,
 };
 
 const playerReducer = (state = defaultPlayer, action) => {
@@ -19,6 +20,11 @@ const playerReducer = (state = defaultPlayer, action) => {
       return {
         ...state,
         name: action.name,
+      };
+    case "SET_SCORE":
+      return {
+        ...state,
+        score: action.score,
       };
     case "RESET_PLAYER":
       return defaultPlayer;

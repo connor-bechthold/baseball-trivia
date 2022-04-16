@@ -4,3 +4,9 @@ export const setGameId = (gameId) => {
     gameId,
   };
 };
+
+export const resetGame = () => {
+  return {
+    type: "RESET_GAME",
+  };
+};

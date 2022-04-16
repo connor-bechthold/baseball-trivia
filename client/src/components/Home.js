@@ -1,7 +1,18 @@
 import { Button } from "@mui/material";
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { socket } from "..";
+import { resetGame } from "../actions/game";
+import { resetPlayer } from "../actions/player";
 
-const Home = () => {
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetPlayer: () => dispatch(resetPlayer()),
+    resetGame: () => dispatch(resetGame()),
+  };
+};
+
+const Home = ({ resetGame, resetPlayer }) => {
   //Navigation
   const navigate = useNavigate();
 
@@ -13,6 +24,14 @@ const Home = () => {
   const toJoinGame = () => {
     navigate("/join");
   };
+
+  //If the host disconnects, reset store and go back to this page
+  socket.on("hostDisconnected", () => {
+    navigate("/");
+    resetPlayer();
+    resetGame();
+  });
+
   return (
     <div>
       <h1>Welcome To Sports Trivia!</h1>
@@ -32,4 +51,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default connect(null, mapDispatchToProps)(Home);

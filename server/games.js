@@ -10,12 +10,24 @@ module.exports = class Games {
     const gameId = uuidv4();
     const questions = await getQuestions(difficulty, numberOfQuestions);
 
-    console.log(questions);
+    //Decode questions from URI format
+    const decodedQuestions = questions.map((q) => {
+      const incorrectAnswers = q.incorrect_answers.map((i) => {
+        return decodeURIComponent(i);
+      });
+
+      return {
+        ...q,
+        question: decodeURIComponent(q.question),
+        correct_answer: decodeURIComponent(q.correct_answer),
+        incorrect_answers: incorrectAnswers,
+      };
+    });
 
     const newGame = {
       gameId,
       hostId,
-      questions,
+      questions: decodedQuestions,
       currentQuestion: null,
       numberOfPlayers: 1,
       playersAnswered: 0,
@@ -35,6 +47,14 @@ module.exports = class Games {
     return game;
   }
 
+  getGameByHostId(hostId) {
+    const game = this.games.find((x) => x.hostId === hostId);
+    if (!game) {
+      return null;
+    }
+    return game;
+  }
+
   getCurrentQuestion(gameId) {
     const game = this.games.find((x) => x.gameId === gameId);
     if (game) {
@@ -42,5 +62,22 @@ module.exports = class Games {
       game.currentQuestion = currentQuestion;
       return currentQuestion;
     }
+  }
+
+  decrementNumberOfPlayers(gameId) {
+    const game = this.games.find((x) => x.gameId === gameId);
+    if (game) {
+      game.numberOfPlayers -= 1;
+    }
+  }
+
+  deleteGameById(gameId) {
+    console.log("BEFORE", this.games);
+    const gameIndex = this.games.findIndex((x) => x.gameId === gameId);
+    if (gameIndex !== -1) {
+      this.games.splice(gameIndex, 1);
+    }
+
+    console.log("AFTER", this.games);
   }
 };

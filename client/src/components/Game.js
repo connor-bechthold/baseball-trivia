@@ -1,29 +1,58 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import { socket } from "..";
+import { setScore } from "../actions/player";
 import QuestionPreview from "./QuestionPreview";
 import QuestionView from "./QuestionView";
+import RoundEnd from "./RoundEnd";
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setScore: (score) => dispatch(setScore(score)),
+  };
+};
 
 const mapStateToProps = (state) => {
   return {
     name: state.player.name,
+    score: state.player.score,
   };
 };
 
-const Game = ({ name }) => {
+const Game = ({ name, score, setScore }) => {
   //Set the state with next question when it comes
-  useEffect(() => {
-    socket.on("nextQuestion", (question) => {
-      setQuestion(question.question);
-      setOptions(question.options);
-    });
-  }, []);
+  socket.on("nextQuestion", (question) => {
+    setQuestion(question.question);
+    setOptions(question.options);
+    setGameState("questionPreview");
+  });
 
-  const [gameState, setGameState] = useState("questionPreview");
+  //If the server indicates that the round has ended
+  socket.on("roundEnded", ({ playersData, correctAnswer, gameEnded }) => {
+    //Get the current user
+    const currentPlayer = playersData.find((x) => x.playerId === socket.id);
 
+    //Sort the player data by score
+    playersData.sort((a, b) => b.score - a.score);
+
+    setIsCorrect(currentPlayer.correct);
+    setScore(currentPlayer.score);
+    setCorrectAnswer(correctAnswer);
+    setLeaderboard(playersData);
+    setGameEnded(gameEnded);
+    setGameState("roundEnd");
+  });
+
+  //Game State
+  const [gameState, setGameState] = useState("");
+  const [gameEnded, setGameEnded] = useState(false);
+
+  //Question Config
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState("");
-  const [score, setScore] = useState(0);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [isCorrect, setIsCorrect] = useState(false);
 
   return (
     <div>
@@ -35,8 +64,16 @@ const Game = ({ name }) => {
       {gameState === "questionView" && (
         <QuestionView question={question} options={options} />
       )}
+      {gameState === "roundEnd" && (
+        <RoundEnd
+          isCorrect={isCorrect}
+          correctAnswer={correctAnswer}
+          leaderboard={leaderboard}
+          gameEnded={gameEnded}
+        />
+      )}
     </div>
   );
 };
 
-export default connect(mapStateToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
