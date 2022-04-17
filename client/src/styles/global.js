@@ -9,6 +9,7 @@ export const globalTheme = createTheme({
     },
     h6: {
       color: "white",
+      marginTop: "15px",
     },
     body2: {
       color: "white",
@@ -21,6 +22,7 @@ export const globalTheme = createTheme({
       contrastText: "white",
     },
   },
+
   components: {
     MuiButton: {
       styleOverrides: {

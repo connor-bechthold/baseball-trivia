@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { TextField, Button, Modal, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Modal,
+  Box,
+  Typography,
+  FormControl,
+} from "@mui/material";
 import { errorModalStyle } from "../styles/modal";
 import { socket } from "..";
 import { useNavigate } from "react-router-dom";
@@ -65,29 +72,35 @@ const JoinGame = (props) => {
     }
   };
   return (
-    <div>
-      <div>
-        <h1>Join Game</h1>
-        <p>Game Name</p>
-        <TextField
-          variant="outlined"
-          value={gameId}
-          onChange={handleGameIdChange}
-        />
-        <p>Player Name</p>
-        <TextField
-          displayEmpty
-          variant="outlined"
-          value={name}
-          onChange={handleNameChange}
-        />
-        <Button
-          style={{ backgroundColor: "green", color: "white" }}
-          onClick={joinGame}
-        >
-          Join Game
-        </Button>
-      </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+    >
+      <Box sx={{ height: "80vh", width: "40%" }}>
+        <FormControl fullWidth>
+          <Typography variant="h6">Game Code</Typography>
+          <TextField
+            sx={{ input: { color: "white" } }}
+            autoComplete="off"
+            value={gameId}
+            onChange={handleGameIdChange}
+          />
+          <Typography variant="h6">Player Name</Typography>
+          <TextField
+            autoComplete="off"
+            sx={{ input: { color: "white" } }}
+            value={name}
+            onChange={handleNameChange}
+          />
+        </FormControl>
+        <Box sx={{ textAlign: "center", marginTop: "25px" }}>
+          <Button onClick={joinGame} variant="contained" size="large">
+            Join Game
+          </Button>
+        </Box>
+      </Box>
 
       <Modal open={error} onClose={handleErrorClose}>
         <Box sx={errorModalStyle}>
@@ -97,7 +110,7 @@ const JoinGame = (props) => {
           <Typography sx={{ mt: 2 }}>{errorMessage}</Typography>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 };
 

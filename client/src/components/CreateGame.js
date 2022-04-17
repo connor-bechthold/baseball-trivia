@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { setHost, setName } from "../actions/player";
 import { setGameId } from "../actions/game";
+import { Test } from "../styles/textField";
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -83,52 +84,62 @@ const CreateGame = (props) => {
   };
 
   return (
-    <div>
-      <div>
-        <h1>Create Game</h1>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+    >
+      <Box sx={{ height: "80vh", width: "40%" }}>
+        {" "}
         <FormControl fullWidth>
-          <p>Name</p>
-          <TextField
-            variant="outlined"
+          <Typography variant="h6">Name</Typography>{" "}
+          <Test
+            autoComplete="off"
             value={name}
             onChange={handleNameChange}
+            sx={{ input: { color: "white" } }}
           />
-          <p>Difficulty</p>
-          <Select value={difficulty} onChange={handleDifficultyChange}>
+          <Typography variant="h6">Difficulty</Typography>
+          <Select
+            value={difficulty}
+            onChange={handleDifficultyChange}
+            sx={{ color: "white" }}
+          >
             <MenuItem value="">Any</MenuItem>
             <MenuItem value={"easy"}>Easy</MenuItem>
             <MenuItem value={"medium"}>Medium</MenuItem>
             <MenuItem value={"hard"}>Hard</MenuItem>
           </Select>
-
-          <p>Number Of Questions</p>
+          <Typography variant="h6">Number Of Questions</Typography>
           <TextField
             type="number"
+            autoComplete="off"
             value={numberOfQuestions}
             onChange={handleNumberOfQuestionsChange}
+            sx={{ input: { color: "white" } }}
             InputLabelProps={{
               min: 1,
               max: 20,
             }}
           />
         </FormControl>
-        <Button
-          style={{ backgroundColor: "green", color: "white" }}
-          onClick={createGame}
-        >
-          Create Game
-        </Button>
-      </div>
+        <Box sx={{ textAlign: "center", marginTop: "25px" }}>
+          <Button onClick={createGame} size="large" variant="contained">
+            Create Game
+          </Button>
+        </Box>
+      </Box>
 
       <Modal open={error} onClose={handleErrorClose}>
         <Box sx={errorModalStyle}>
-          <Typography variant="h6" component="h2" color="red" fontWeight="bold">
+          <Typography variant="h6" color="red" fontWeight="bold">
             Error
           </Typography>
           <Typography sx={{ mt: 2 }}>{errorMessage}</Typography>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 };
 
