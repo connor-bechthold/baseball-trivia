@@ -11,10 +11,6 @@ import { ThemeProvider } from "@mui/material";
 //Setup global socket constant
 export const socket = io("http://localhost:3001");
 
-//Setup global axios constant
-export const axios = require("axios").default;
-axios.defaults.baseURL = "https://jsonplaceholder.typicode.com";
-
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(

@@ -7,6 +7,10 @@ export const globalTheme = createTheme({
       fontFamily: "'Fredoka One', cursive",
       color: "white",
     },
+    h5: {
+      fontFamily: "'Fredoka One', cursive",
+      color: "#201f30",
+    },
     h6: {
       color: "white",
       marginTop: "15px",

@@ -12,12 +12,14 @@ import { socket } from "..";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { setName, setPlayer } from "../actions/player";
-import { setGameId } from "../actions/game";
+import { setGameId, setTotalQuestions } from "../actions/game";
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setPlayer: () => dispatch(setPlayer()),
     setName: (name) => dispatch(setName(name)),
+    setTotalQuestions: (totalQuestions) =>
+      dispatch(setTotalQuestions(totalQuestions)),
     setGameId: (gameId) => dispatch(setGameId(gameId)),
   };
 };
@@ -65,6 +67,7 @@ const JoinGame = (props) => {
         } else {
           props.setPlayer();
           props.setName(name);
+          props.setTotalQuestions(res.totalQuestions);
           props.setGameId(gameId);
           navigate("/waiting");
         }

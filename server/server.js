@@ -65,13 +65,15 @@ io.on("connection", async (socket) => {
     }
     players.createPlayer(socket.id, game.gameId, name);
 
+    const totalQuestions = game.questions.length;
+
     socket.join(game.gameId);
     game.numberOfPlayers += 1;
 
     const playersData = players.getPlayersByGameId(gameId);
     io.to(gameId).emit("playersData", playersData);
 
-    return callback({ status: "Success" });
+    return callback({ status: "Success", totalQuestions });
   });
 
   //Host starts the game

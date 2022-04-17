@@ -14,13 +14,15 @@ import { socket } from "..";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { setHost, setName } from "../actions/player";
-import { setGameId } from "../actions/game";
+import { setGameId, setTotalQuestions } from "../actions/game";
 import { Test } from "../styles/textField";
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setHost: () => dispatch(setHost()),
     setName: (name) => dispatch(setName(name)),
+    setTotalQuestions: (totalQuestions) =>
+      dispatch(setTotalQuestions(totalQuestions)),
     setGameId: (gameId) => dispatch(setGameId(gameId)),
   };
 };
@@ -77,6 +79,7 @@ const CreateGame = (props) => {
       socket.emit("createGame", data, (gameId) => {
         props.setHost();
         props.setName(name);
+        props.setTotalQuestions(numberOfQuestions);
         props.setGameId(gameId);
         navigate("/waiting");
       });

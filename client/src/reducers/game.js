@@ -1,5 +1,7 @@
 const defaultGame = {
   gameId: "",
+  currentQuestion: 0,
+  totalQuestions: 0,
 };
 
 const gameReducer = (state = defaultGame, action) => {
@@ -9,6 +11,17 @@ const gameReducer = (state = defaultGame, action) => {
         ...state,
         gameId: action.gameId,
       };
+    case "SET_CURRENT_QUESTION":
+      return {
+        ...state,
+        currentQuestion: action.currentQuestion,
+      };
+    case "SET_TOTAL_QUESTIONS":
+      return {
+        ...state,
+        totalQuestions: action.totalQuestions,
+      };
+
     case "RESET_GAME":
       return defaultGame;
     default:
