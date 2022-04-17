@@ -42,7 +42,7 @@ const Home = ({ resetGame, resetPlayer }) => {
       <Box sx={{ height: "50vh", textAlign: "center" }}>
         <Typography variant="h3">Welcome To Sprivia!</Typography>
         <Typography variant="body2">(A sports based trivia game)</Typography>
-        <Typography variant="h6" sx={{ marginTop: "15px" }}>
+        <Typography variant="h6">
           Start a new game or join a game to get started
         </Typography>
 
