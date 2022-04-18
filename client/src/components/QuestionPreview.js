@@ -1,22 +1,35 @@
+import { Box, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 const QuestionPreview = ({ question, setGameState }) => {
-  const [seconds, setSeconds] = useState(5);
+  const [seconds, setSeconds] = useState(100);
 
   useEffect(() => {
     if (seconds > 0) {
-      setTimeout(() => setSeconds(seconds - 1), 1000);
+      setTimeout(() => setSeconds(seconds - 25), 1000);
     } else {
       setGameState("questionView");
     }
   });
 
   return (
-    <div>
-      <h1>THIS IS THE QUESTION PREVIEW</h1>
-      <h1>{seconds}</h1>
-      <p>{question}</p>
-    </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="40vh"
+    >
+      <Box sx={{ width: "80%", textAlign: "center" }}>
+        <LinearProgress
+          variant="determinate"
+          value={seconds}
+          sx={{ width: "100%" }}
+        />
+        <Typography variant="h4" sx={{ marginTop: "50px" }}>
+          {question}
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

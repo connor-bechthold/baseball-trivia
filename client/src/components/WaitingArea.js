@@ -89,6 +89,9 @@ const WaitingArea = ({ gameId, type }) => {
         <Typography variant="h3" sx={{ marginTop: "30px" }}>
           Players
         </Typography>
+        {type === "PLAYER" && (
+          <Typography variant="h6">Waiting for host to start...</Typography>
+        )}
         <Grid container spacing={2}>
           {players.map((player) => {
             if (player.playerId === socket.id) {

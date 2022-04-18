@@ -71,7 +71,7 @@ const Game = ({
   const [isCorrect, setIsCorrect] = useState(false);
 
   return (
-    <Box sx={{ paddingBottom: "10vh" }}>
+    <Box sx={{ padding: "5vh 0" }}>
       <Header
         currentQuestion={currentQuestion}
         totalQuestions={totalQuestions}
