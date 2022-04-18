@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { setHost, setName } from "../actions/player";
 import { setGameId, setTotalQuestions } from "../actions/game";
-import { Test } from "../styles/textField";
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -97,7 +96,7 @@ const CreateGame = (props) => {
         {" "}
         <FormControl fullWidth>
           <Typography variant="h6">Name</Typography>{" "}
-          <Test
+          <TextField
             autoComplete="off"
             value={name}
             onChange={handleNameChange}

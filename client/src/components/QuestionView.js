@@ -24,7 +24,7 @@ const QuestionView = ({ question, options, type }) => {
       //If the timer reaches zero, some players haven't answered
       //So, the HOST will emit to the server and update the game state
       if (type === "HOST") {
-        // socket.emit("timerEnded");
+        socket.emit("timerEnded");
       }
     }
   });

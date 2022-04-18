@@ -1,41 +1,46 @@
 import {
-  Paper,
+  Box,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import { socket } from "..";
 
 const Leaderboard = ({ leaderboard }) => {
   return (
-    <div>
-      <h1>LEADERBOARD</h1>
-      <TableContainer component={Paper} sx={{ width: "90%" }}>
+    <Box sx={{ width: "50%", margin: "20px auto 0" }}>
+      <TableContainer>
         <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell align="right">Score</TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
-            {leaderboard.map((player) => (
-              <TableRow
-                key={player.playerId}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {player.name}
-                </TableCell>
-                <TableCell align="right">{player.score}</TableCell>
-              </TableRow>
-            ))}
+            {leaderboard.map((player) => {
+              const backgroundColor =
+                player.playerId === socket.id ? "#E05B5B" : "#201f30";
+              return (
+                <TableRow key={player.playerId} sx={{ backgroundColor }}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{ borderBottom: "none" }}
+                  >
+                    <Typography variant="h5" sx={{ color: "white" }}>
+                      {player.name}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right" sx={{ borderBottom: "none" }}>
+                    <Typography variant="h5" sx={{ color: "white" }}>
+                      {player.score}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 

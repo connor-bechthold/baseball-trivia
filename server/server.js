@@ -2,10 +2,12 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const cors = require("cors");
+const ws = require("ws");
 const { Server } = require("socket.io");
 const Games = require("./games");
 const Players = require("./players");
 const { prepQuestion } = require("./questions");
+const { toOrdinalSuffix } = require("./utils");
 const port = process.env.PORT || 3001;
 
 //Enable cors
@@ -19,6 +21,7 @@ const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
   },
+  wsEngine: ws.Server,
 });
 
 //Create Games and Players instance
@@ -27,8 +30,6 @@ const players = new Players();
 
 //Define socket connection
 io.on("connection", async (socket) => {
-  console.log(`User with ID ${socket.id} connected!`);
-
   //Host creates a game
   socket.on(
     "createGame",
@@ -61,6 +62,12 @@ io.on("connection", async (socket) => {
       return callback({
         status: "Error",
         message: `Game with ID ${gameId} does not exist`,
+      });
+    }
+    if (game.started) {
+      return callback({
+        status: "Error",
+        message: `Game with ID ${gameId} has already started`,
       });
     }
     players.createPlayer(socket.id, game.gameId, name);
@@ -140,7 +147,7 @@ io.on("connection", async (socket) => {
 
         //Calculate the player's score
         //1000 points for each correct question, plus a time bonus
-        const timeTakenToAnswer = 20 - time;
+        const timeTakenToAnswer = 20 - time / 4;
         const scoreAdded = 1000 * (1 - timeTakenToAnswer / 20 / 2);
 
         player.score += scoreAdded;
@@ -197,19 +204,22 @@ io.on("connection", async (socket) => {
         handleHostDisconnect(player);
       }
     }
-    console.log(`User with ID ${socket.id} disconnected!`);
   });
 });
 
 const endCurrentRound = (gameId) => {
-  const gamePlayers = players.getPlayersByGameId(gameId);
+  let gamePlayers = players.getPlayersByGameId(gameId);
 
-  const playersData = gamePlayers.map((player) => {
+  //Sort the player data by score
+  gamePlayers.sort((a, b) => b.score - a.score);
+
+  const playersData = gamePlayers.map((player, index) => {
     const playerData = {
       playerId: player.playerId,
       name: player.name,
       correct: player.correct,
       score: player.score,
+      position: toOrdinalSuffix(index + 1),
     };
 
     //Reset each player's correct property to false

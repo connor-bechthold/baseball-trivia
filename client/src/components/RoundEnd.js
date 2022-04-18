@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button, styled, Typography } from "@mui/material";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { socket } from "..";
@@ -22,6 +22,7 @@ const mapDispatchToProps = (dispatch) => {
 const RoundEnd = ({
   isCorrect,
   correctAnswer,
+  position,
   leaderboard,
   type,
   gameEnded,
@@ -43,36 +44,75 @@ const RoundEnd = ({
     }
   };
 
+  //Navigation
   const navigate = useNavigate();
 
+  //Styled incorrect/correct box
+  const StyledBox = styled(Box)(({ backgroundColor }) => ({
+    backgroundColor,
+    height: "5em",
+    width: "30%",
+    margin: "0 auto",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "5px",
+  }));
+
+  //Position text display
+  const positionText = gameEnded ? "finished" : "are currently";
+
   return (
-    <div>
-      {isCorrect ? (
-        <h1 style={{ color: "green" }}>Your Answer Is Correct!</h1>
-      ) : (
-        <h1
-          style={{ color: "red" }}
-        >{`Incorrect! The correct answer was: ${correctAnswer}`}</h1>
-      )}
-      {gameEnded && <h1>Game Over!</h1>}
-      <Leaderboard leaderboard={leaderboard} />
-      {type === "HOST" && !gameEnded && (
-        <Button
-          style={{ backgroundColor: "green", color: "white" }}
-          onClick={getNextQuestion}
-        >
-          Next Question
-        </Button>
-      )}
-      {gameEnded && (
-        <Button
-          style={{ backgroundColor: "red", color: "white" }}
-          onClick={finishGame}
-        >
-          Home
-        </Button>
-      )}
-    </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="85vh"
+    >
+      <Box sx={{ width: "80%", textAlign: "center" }}>
+        {isCorrect ? (
+          <StyledBox backgroundColor="#56C362">
+            <Typography variant="h3">CORRECT</Typography>
+          </StyledBox>
+        ) : (
+          <StyledBox backgroundColor="#E05B5B">
+            <Typography variant="h3">INCORRECT</Typography>
+          </StyledBox>
+        )}
+        {isCorrect ? (
+          <Typography variant="h6">{`You ${positionText} in ${position} place`}</Typography>
+        ) : (
+          <Typography variant="h6">
+            {`The correct answer was: ${correctAnswer}. You ${positionText} in ${position}
+            place`}
+          </Typography>
+        )}
+        <Typography variant="h4" sx={{ paddingTop: "15px" }}>
+          Top 5
+        </Typography>
+        <Leaderboard leaderboard={leaderboard} />
+        {type === "HOST" && !gameEnded && (
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ marginTop: "30px" }}
+            onClick={getNextQuestion}
+          >
+            Next Question
+          </Button>
+        )}
+        {gameEnded && (
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ marginTop: "30px" }}
+            onClick={finishGame}
+          >
+            Home
+          </Button>
+        )}
+      </Box>
+    </Box>
   );
 };
 

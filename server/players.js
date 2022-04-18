@@ -30,16 +30,13 @@ module.exports = class Players {
   }
 
   deletePlayerById(playerId) {
-    console.log("BEFORE", this.players);
     const playerIndex = this.players.findIndex((x) => x.playerId === playerId);
     if (playerIndex !== -1) {
       this.players.splice(playerIndex, 1);
     }
-    console.log("AFTER", this.players);
   }
 
   deletePlayersByGame(gameId) {
-    console.log("before", this.players);
     const playersToDelete = this.players.filter((x) => x.gameId === gameId);
     for (let i = 0; i < playersToDelete.length; i++) {
       const player = playersToDelete[i];
@@ -49,6 +46,5 @@ module.exports = class Players {
         this.players.splice(playerIndex, 1);
       }
     }
-    console.log("after", this.players);
   }
 };

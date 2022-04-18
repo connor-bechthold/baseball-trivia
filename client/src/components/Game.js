@@ -48,13 +48,14 @@ const Game = ({
     //Get the current user
     const currentPlayer = playersData.find((x) => x.playerId === socket.id);
 
-    //Sort the player data by score
-    playersData.sort((a, b) => b.score - a.score);
+    //Get the top five leaderboard
+    const topFive = playersData.slice(0, 5);
 
     setIsCorrect(currentPlayer.correct);
     setScore(currentPlayer.score);
+    setPosition(currentPlayer.position);
     setCorrectAnswer(correctAnswer);
-    setLeaderboard(playersData);
+    setLeaderboard(topFive);
     setGameEnded(gameEnded);
     setGameState("roundEnd");
   });
@@ -66,6 +67,7 @@ const Game = ({
   //Question Config
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState("");
+  const [position, setPosition] = useState("");
   const [leaderboard, setLeaderboard] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
@@ -86,6 +88,7 @@ const Game = ({
         <RoundEnd
           isCorrect={isCorrect}
           correctAnswer={correctAnswer}
+          position={position}
           leaderboard={leaderboard}
           gameEnded={gameEnded}
         />

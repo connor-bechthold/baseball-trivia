@@ -72,12 +72,9 @@ module.exports = class Games {
   }
 
   deleteGameById(gameId) {
-    console.log("BEFORE", this.games);
     const gameIndex = this.games.findIndex((x) => x.gameId === gameId);
     if (gameIndex !== -1) {
       this.games.splice(gameIndex, 1);
     }
-
-    console.log("AFTER", this.games);
   }
 };
