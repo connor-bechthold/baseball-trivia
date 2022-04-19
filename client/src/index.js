@@ -9,7 +9,7 @@ import { globalTheme } from "./styles/global";
 import { ThemeProvider } from "@mui/material";
 
 //Setup global socket constant
-export const socket = io("http://localhost:3001");
+export const socket = io(process.env.REACT_APP_CONNECT_URL);
 
 const container = document.getElementById("root");
 const root = createRoot(container);
