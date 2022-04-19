@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { socket } from "..";
 import { setCurrentQuestion } from "../actions/game";
@@ -35,30 +35,32 @@ const Game = ({
   setScore,
   setCurrentQuestion,
 }) => {
-  //Set the state with next question when it comes
-  socket.on("nextQuestion", (question) => {
-    setQuestion(question.question);
-    setCurrentQuestion(currentQuestion + 1);
-    setOptions(question.options);
-    setGameState("questionPreview");
-  });
+  useEffect(() => {
+    //Set the state with next question when it comes
+    socket.on("nextQuestion", (question) => {
+      setQuestion(question.question);
+      setCurrentQuestion(currentQuestion + 1);
+      setOptions(question.options);
+      setGameState("questionPreview");
+    });
 
-  //If the server indicates that the round has ended
-  socket.on("roundEnded", ({ playersData, correctAnswer, gameEnded }) => {
-    //Get the current user
-    const currentPlayer = playersData.find((x) => x.playerId === socket.id);
+    //If the server indicates that the round has ended
+    socket.on("roundEnded", ({ playersData, correctAnswer, gameEnded }) => {
+      //Get the current user
+      const currentPlayer = playersData.find((x) => x.playerId === socket.id);
 
-    //Get the top five leaderboard
-    const topFive = playersData.slice(0, 5);
+      //Get the top five leaderboard
+      const topFive = playersData.slice(0, 5);
 
-    setIsCorrect(currentPlayer.correct);
-    setScore(currentPlayer.score);
-    setPosition(currentPlayer.position);
-    setCorrectAnswer(correctAnswer);
-    setLeaderboard(topFive);
-    setGameEnded(gameEnded);
-    setGameState("roundEnd");
-  });
+      setIsCorrect(currentPlayer.correct);
+      setScore(currentPlayer.score);
+      setPosition(currentPlayer.position);
+      setCorrectAnswer(correctAnswer);
+      setLeaderboard(topFive);
+      setGameEnded(gameEnded);
+      setGameState("roundEnd");
+    });
+  }, [currentQuestion, setCurrentQuestion, setScore]);
 
   //Game State
   const [gameState, setGameState] = useState("");

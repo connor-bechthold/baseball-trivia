@@ -29,17 +29,17 @@ const WaitingArea = ({ gameId, type }) => {
   //Get the initial player data on component mount
   useEffect(() => {
     socket.emit("getPlayersData", { gameId });
-  }, [gameId]);
 
-  //If a new player joins, update state
-  socket.on("playersData", (players) => {
-    setPlayers(players);
-  });
+    //If a new player joins, update state
+    socket.on("playersData", (players) => {
+      setPlayers(players);
+    });
 
-  //Host has initiated the game to start
-  socket.on("hostStartedGame", () => {
-    navigate("/game");
-  });
+    //Host has initiated the game to start
+    socket.on("hostStartedGame", () => {
+      navigate("/game");
+    });
+  }, [gameId, navigate]);
 
   //Handle the copy button click
   const handleCopy = () => {

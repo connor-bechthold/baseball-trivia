@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { socket } from "..";
@@ -25,12 +26,14 @@ const Home = ({ resetGame, resetPlayer }) => {
     navigate("/join");
   };
 
-  //If the host disconnects, reset store and go back to this page
-  socket.on("hostDisconnected", () => {
-    navigate("/");
-    resetPlayer();
-    resetGame();
-  });
+  useEffect(() => {
+    //If the host disconnects, reset store and go back to this page
+    socket.on("hostDisconnected", () => {
+      navigate("/");
+      resetPlayer();
+      resetGame();
+    });
+  }, [navigate, resetGame, resetPlayer]);
 
   return (
     <Box

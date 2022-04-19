@@ -2,27 +2,42 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const cors = require("cors");
+const path = require("path");
 const ws = require("ws");
-const { Server } = require("socket.io");
+const socket = require("socket.io");
 const Games = require("./games");
 const Players = require("./players");
 const { prepQuestion } = require("./questions");
 const { toOrdinalSuffix } = require("./utils");
-const port = process.env.PORT || 3001;
 
-//Enable cors
-app.use(cors);
+require("dotenv").config();
+const port = process.env.PORT || 3001;
 
 //Create http server
 const server = http.createServer(app);
 
 //Configure socket
-const io = new Server(server, {
+const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
   },
-  wsEngine: ws.Server,
 });
+
+//Setup production deployment
+if (process.env.NODE_ENV === "production") {
+  //Static folder
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "..", "client", "build", "index.html")
+    );
+  });
+} else {
+  app.get("*", (req, res) => {
+    res.send("Hello");
+  });
+}
 
 //Create Games and Players instance
 const games = new Games();
